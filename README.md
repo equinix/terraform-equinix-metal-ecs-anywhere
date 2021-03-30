@@ -1,2 +1,2 @@
 # ecs-anywhere-on-metal
-Run on Equinix Metal your ECS tasks
+Run ECS tasks on Equinix Metal
