@@ -1,0 +1,19 @@
+terraform {
+  required_providers {
+    metal = {
+      source = "equinix/metal"
+    }
+  }
+}
+
+provider "metal" {
+  auth_token = var.metal_key
+}
+
+provider "aws" {
+  version = "~> 3.15.0"
+
+  access_key = var.aws_access_key
+  secret_key = var.aws_secret_key
+  region     = var.aws_region
+}
