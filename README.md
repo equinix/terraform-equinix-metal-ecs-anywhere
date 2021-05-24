@@ -1,8 +1,16 @@
 # AWS ECS Anywhere on Equinix Metal
 
+
 ## Pre-Requisites
 
+- 
+
 ## Deployment
+
+```
+terraform init
+terraform apply
+```
 
 ```
 aws ecr get-login-password --region $(terraform output -raw aws-region) | docker login --password-stdin --username AWS $(terraform output -raw ecr-url)
