@@ -36,3 +36,4 @@ util/keys
 plugins
 tf_debug.log
 ecs_task_definition.json
+!.terraform.lock.hcl
