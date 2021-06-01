@@ -230,8 +230,9 @@ variable "aws_dx_bgp_equinix_side_address" {
 }
 
 variable "aws_vpc_endpoint_services" {
-  type    = list(string)
-  default = ["ecs", "ecs-agent", "ecs-telemetry", "s3", "sqs"]
+  description = "List for the name of the services you want to enable a VPC endpoint"
+  type        = list(string)
+  default     = ["ecs", "ecs-agent", "ecs-telemetry", "s3", "sqs"]
 }
 
 variable "aws_access_key" {
