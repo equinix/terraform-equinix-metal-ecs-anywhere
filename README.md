@@ -1,3 +1,5 @@
+![ECS on Equinix Metal](docs/images/ecsmetal.png)
+
 # AWS ECS Anywhere on Equinix Metal
 This repository includes a set of Terraform configuration files to deploy [ECS Anywhere](https://aws.amazon.com/blogs/aws/getting-started-with-amazon-ecs-anywhere-now-generally-available/) in Equinix Metal. We've included all the resources you'll need to deploy and end-to-end solution where you can use a direct and private line to AWS from Equinix Metal using the Equinix Platform. You can even find a demo application to confirm that everything you deploy works and then adapt the configuration files to your needs. You can find more information about [ECS Anywhere and Equinix metal in the Equinix blog](https://blog.equinix.com/blog/2021/04/19/amazon-elastic-container-service-ecs-anywhere-accelerates-digital-business/).
 
