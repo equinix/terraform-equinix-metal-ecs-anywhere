@@ -74,7 +74,7 @@ resource "null_resource" "configure_cisco" {
   ]
 
   triggers = {
-    connection_ids = join(",", [equinix_network_bgp.aws.id, equinix_network_bgp.metal.0.id])
+    connection_ids = join(",", concat([equinix_network_bgp.aws.id], equinix_network_bgp.metal.*.id))
   }
 
   provisioner "local-exec" {

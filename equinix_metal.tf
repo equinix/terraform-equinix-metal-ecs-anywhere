@@ -23,6 +23,7 @@ data "template_file" "user_data" {
 
   template = file("templates/user_data.sh")
   vars = {
+    ecs_cluster         = var.ecs_cluster_name
     activation_code     = aws_ssm_activation.ssm_activation_pair.activation_code
     ssm_activation_pair = aws_ssm_activation.ssm_activation_pair.id
     region              = var.aws_region

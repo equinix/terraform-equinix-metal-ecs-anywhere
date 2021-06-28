@@ -154,13 +154,12 @@ variable "aws_region" {
 variable "iam_role_name" {
   description = "Name your IAM Role for SSM register"
   type        = string
-  default     = "ecsAnywhereRole"
+  default     = "ecs-any-role"
 }
 
 variable "ecs_cluster_name" {
   description = "Name for your ECS cluster"
   type        = string
-  default     = "ecsAnywhere-cluster"
 }
 
 variable "ecs_task_name" {

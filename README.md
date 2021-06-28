@@ -119,20 +119,6 @@ docker build -t $(terraform output -raw ecr-url) ./app
 docker push $(terraform output -raw ecr-url)
 ```
 
-Now you need to deploy the ECS task and a service to deploy the application in ECS. To do so, run the following commands:
-
-```
-sed -e s#CHANGEME_IMAGE#$(terraform output -raw ecr-url)# \
-    -e s#CHANGEME_EXECUTION_ROLE_ARN#$(terraform output -raw iam-exec-role)# \
-    -e s#CHANGEME_TASK_ROLE_ARN#$(terraform output -raw iam-task-role)# \
-    -e s#CHANGEME_AWSLOGS_GROUP#"ecs-external-"$(terraform output -raw ecs-cluster)# \
-    -e s#CHANGEME_REGION#$(terraform output -raw aws-region)# \
-    -e s#CHANGEME_SQS_QUEUE_URL#$(terraform output -raw sqs-url)# \
-    templates/ecs_task_definition-template.json > ecs_task_definition.json
-aws ecs register-task-definition --cli-input-json file://ecs_task_definition.json --region $(terraform output -raw aws-region)
-aws ecs create-service --service-name ecsworker-external-service --cluster $(terraform output -raw ecs-cluster) --launch-type EXTERNAL --desired-count 1 --task-definition ecsworker-external --region $(terraform output -raw aws-region)
-```
-
 You can verify now in the AWS console that the ECS task is running.
 
 ## Testing
@@ -168,7 +154,5 @@ You should see how the files are moving from the source folder to the destinatio
 After you've finished with your tests, you can delete all the resources by running the following commands:
 
 ```
-aws ecs delete-service --cluster $(terraform output -raw ecs-cluster) --service ecsworker-external-service --region $(terraform output -raw aws-region) --force
-aws ecs deregister-task-definition --cli-input-json file://ecs_task_definition.json --region $(terraform output -raw aws-region)
 terraform destroy
 ```
