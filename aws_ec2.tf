@@ -24,10 +24,20 @@ resource "aws_network_interface" "aws-vm" {
   ]
 }
 
+resource "tls_private_key" "ecsany" {
+  algorithm = "RSA"
+  rsa_bits  = 4096
+}
+
+resource "aws_key_pair" "ecsany" {
+  key_name   = var.cluster_name
+  public_key = tls_private_key.ecsany.public_key_openssh
+}
+
 resource "aws_instance" "aws-vm" {
   ami           = data.aws_ami.aws-ami-ubuntu.id
   instance_type = "t2.micro"
-  key_name      = "cm-macpro"
+  key_name      = aws_key_pair.ecsany.key_name
 
   network_interface {
     network_interface_id = aws_network_interface.aws-vm.id
