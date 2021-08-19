@@ -31,6 +31,10 @@ data "template_file" "user_data" {
 }
 
 resource "metal_device" "worker_nodes" {
+  depends_on = [
+    metal_ssh_key.ssh_pub_key
+  ]
+
   count            = var.metal_connection_is_vlan_attached ? var.worker_count : 0
   hostname         = format("%s-worker-%02d", local.cluster_name, count.index + 1)
   plan             = var.worker_plan
