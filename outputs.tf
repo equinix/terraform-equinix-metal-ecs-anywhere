@@ -42,3 +42,13 @@ output "ssm_activation_pair" {
   description = "SSM activation pair to register the ECS agent"
   value       = aws_ssm_activation.ssm_activation_pair.id
 }
+
+output "metal_vlan" {
+  description = "Equinix Metal VLAN number"
+  value       = metal_vlan.vlan.vxlan
+}
+
+output "ec2_private_ip" {
+  description = "Private IP address of the EC2 instance"
+  value       = aws_instance.aws-vm.private_ip
+}
