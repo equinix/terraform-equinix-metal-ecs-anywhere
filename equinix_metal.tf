@@ -1,6 +1,5 @@
-resource "metal_vlan" "vlan" {
-  description = format("AWS ECS Anywhere - VLAN for Equinix Fabric in %s", lower(var.facility))
-  facility    = lower(var.facility)
+resource "equinix_metal_vlan" "vlan" {
+  description = format("AWS ECS Anywhere - VLAN for Equinix Fabric in %s", lower(var.metro))
   project_id  = local.project_id
 }
 
@@ -11,7 +10,7 @@ resource "tls_private_key" "ssh_key_pair" {
   rsa_bits  = 4096
 }
 
-resource "metal_ssh_key" "ssh_pub_key" {
+resource "equinix_metal_ssh_key" "ssh_pub_key" {
   count = var.metal_connection_is_vlan_attached ? 1 : 0
 
   name       = local.cluster_name
@@ -30,9 +29,9 @@ data "template_file" "user_data" {
   }
 }
 
-resource "metal_device" "worker_nodes" {
+resource "equinix_metal_device" "worker_nodes" {
   depends_on = [
-    metal_ssh_key.ssh_pub_key
+    equinix_metal_ssh_key.ssh_pub_key
   ]
 
   count            = var.metal_connection_is_vlan_attached ? var.worker_count : 0
@@ -45,22 +44,22 @@ resource "metal_device" "worker_nodes" {
   tags             = ["anthos", "baremetal", "worker"]
 }
 
-resource "metal_device_network_type" "worker_nodes" {
+resource "equinix_metal_device_network_type" "worker_nodes" {
   count = var.metal_connection_is_vlan_attached ? var.worker_count : 0
 
-  device_id = metal_device.worker_nodes.*.id[count.index]
+  device_id = equinix_metal_device.worker_nodes.*.id[count.index]
   type      = "hybrid"
 }
 
-resource "metal_port_vlan_attachment" "worker_nodes" {
+resource "equinix_metal_port_vlan_attachment" "worker_nodes" {
   count = var.metal_connection_is_vlan_attached ? var.worker_count : 0
 
   depends_on = [
-    metal_device_network_type.worker_nodes
+    equinix_metal_device_network_type.worker_nodes
   ]
-  device_id  = metal_device.worker_nodes.*.id[count.index]
+  device_id  = equinix_metal_device.worker_nodes.*.id[count.index]
   port_name  = "eth1"
-  vlan_vnid  = metal_vlan.vlan.vxlan
+  vlan_vnid  = equinix_metal_vlan.vlan.vxlan
   force_bond = true
 }
 
@@ -69,7 +68,7 @@ data "template_file" "private_network_worker" {
 
   template = file("templates/private_network.sh")
   vars = {
-    vlan_id         = metal_vlan.vlan.vxlan
+    vlan_id         = equinix_metal_vlan.vlan.vxlan
     private_ip      = count.index + 10
     private_network = var.cluster_private_network
     aws_subnet_cidr = var.aws_network_cidr
@@ -81,14 +80,14 @@ resource "null_resource" "private_network_worker" {
 
   triggers = {
     template     = data.template_file.private_network_worker.*.rendered[count.index],
-    instance_ids = join(",", metal_device.worker_nodes.*.id)
+    instance_ids = join(",", equinix_metal_device.worker_nodes.*.id)
   }
 
   connection {
     type        = "ssh"
     user        = "root"
     private_key = chomp(tls_private_key.ssh_key_pair.0.private_key_pem)
-    host        = metal_device.worker_nodes.*.access_public_ipv4[count.index]
+    host        = equinix_metal_device.worker_nodes.*.access_public_ipv4[count.index]
   }
 
   provisioner "remote-exec" {
@@ -118,14 +117,14 @@ resource "null_resource" "install_ecs_agent" {
 
   triggers = {
     template     = data.template_file.user_data.0.rendered,
-    instance_ids = join(",", metal_device.worker_nodes.*.id)
+    instance_ids = join(",", equinix_metal_device.worker_nodes.*.id)
   }
 
   connection {
     type        = "ssh"
     user        = "root"
     private_key = chomp(tls_private_key.ssh_key_pair.0.private_key_pem)
-    host        = metal_device.worker_nodes.*.access_public_ipv4[count.index]
+    host        = equinix_metal_device.worker_nodes.*.access_public_ipv4[count.index]
   }
 
   provisioner "remote-exec" {

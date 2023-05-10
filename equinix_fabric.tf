@@ -25,7 +25,7 @@ resource "equinix_ecx_l2_connection" "metal" {
   speed_unit        = var.eqx_fabric_speed_unit
   notifications     = var.eqx_notification_users
   device_uuid       = equinix_network_device.router.id
-  seller_region     = var.facility
+  seller_region     = var.metro
   seller_metro_code = var.eqx_seller_metal_metro_code
   authorization_key = var.eqx_metal_token
 }
