@@ -10,9 +10,6 @@ variable "metro" {
   description = "Equinix Metal metro to deploy into"
 }
 
-variable "facility" {
-  description = "Equinix Metal Facility to deploy into"
-}
 
 variable "worker_plan" {
   description = "Equinix Metal device type to deploy for worker nodes"

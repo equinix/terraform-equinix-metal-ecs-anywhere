@@ -7,11 +7,9 @@ terraform {
     null = {
       source = "hashicorp/null"
     }
-    metal = {
-      source = "equinix/metal"
-    }
     equinix = {
-      source = "equinix/equinix"
+      source  = "equinix/equinix"
+      version = "~> 1.14"
     }
     random = {
       source = "hashicorp/random"
@@ -27,4 +25,8 @@ terraform {
     }
   }
   required_version = ">= 0.13"
+
+  provider_meta "equinix" {
+    module_name = "equinix-metal-ecs-anywhere"
+  }
 }

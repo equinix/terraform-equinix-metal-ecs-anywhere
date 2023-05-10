@@ -43,9 +43,9 @@ output "ssm_activation_pair" {
   value       = aws_ssm_activation.ssm_activation_pair.id
 }
 
-output "metal_vlan" {
+output "equinix_metal_vlan" {
   description = "Equinix Metal VLAN number"
-  value       = metal_vlan.vlan.vxlan
+  value       = equinix_metal_vlan.vlan.vxlan
 }
 
 output "ec2_private_ip" {
